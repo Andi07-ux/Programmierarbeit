@@ -56,7 +56,8 @@ _Explain how you overcame the challenges or what help you needed._
 
 #### 1. ✅ What did I accomplish?
 
-
+Ich habe es geschafft die API einzurichten, und mir die
+Übungen aus dem Unterricht, sowie die Hausaufgaben zu erarbeiten, nachdem ich am ersten Tag nicht anwesend sein konnte.
 
 
 
@@ -65,16 +66,15 @@ _Explain how you overcame the challenges or what help you needed._
 
 #### 2. 🚧 What challenges did I face?
 
-
-
-
+Sich in ein Thema reinfuchsen, von dem man keine Ahnung
+hat fiel mir Anfangs schwer, vor allem wenn Fehlermeldungen kamen wo ich nicht weiter wusste, nachdem die ersten Schritte jedoch verständlich waren war es einfacher als zunächst gedacht.
 
 
 ---
 
 #### 3. 💡 How did I overcome them?
 
-
+Was das aufsetzen der API betrifft, hat mir zum Teil ein Kommilitone per Whatsapp weiter geholfen, zum anderen hat mir KI geholfen. Was die Übungen und Hausaufgaben betrifft hat es nach mehrfachem Probieren funktioniert.
 
 
 
