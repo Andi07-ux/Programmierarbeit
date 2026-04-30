@@ -1,14 +1,1 @@
-[
-  {
-    "id": 1,
-    "title": "Meine API",
-    "content": "123",
-    "created_at": "2026-04-29T12:47:37.868899+00:00"
-  },
-  {
-    "id": 2,
-    "title": "Testversuch 2",
-    "content": "Ich mag Kuchen",
-    "created_at": "2026-04-29T12:51:34.142897+00:00"
-  }
-]
+[]

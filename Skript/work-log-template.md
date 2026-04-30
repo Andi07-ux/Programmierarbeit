@@ -85,7 +85,7 @@ Was das aufsetzen der API betrifft, hat mir zum Teil ein Kommilitone per Whatsap
 
 #### 1. ✅ What did I accomplish?
 
-
+Ich habe die 
 
 
 
