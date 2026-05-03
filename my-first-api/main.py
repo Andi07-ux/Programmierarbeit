@@ -6,6 +6,14 @@ from pathlib import Path
 from typing import Optional, Annotated
 from sqlmodel import SQLModel, Field, Session, create_engine, Relationship, select, or_, col
 
+class NoteTagLink(SQLModel, table=True):
+    __tablename__ = "notetaglink"
+    note_id: Optional[int] = Field(
+        default=None, foreign_key="notes.id", primary_key=True
+    )
+    tag_id: Optional[int] = Field(
+        default=None, foreign_key="tags.id", primary_key=True
+    )
 
 class Note(SQLModel, table=True):
     __tablename__ = 'notes'
@@ -15,9 +23,7 @@ class Note(SQLModel, table=True):
     content: str
     category: str
     created_at: datetime = Field(default_factory=datetime.now)
-    
-    # Many-to-many relationship with Tag (implicit link table)
-    tags: list["Tag"] = Relationship(back_populates="notes")
+    tags: list["Tag"] = Relationship(back_populates="notes", link_model=NoteTagLink)
 
 class Tag(SQLModel, table=True):
     __tablename__ = 'tags'
@@ -26,7 +32,7 @@ class Tag(SQLModel, table=True):
     name: str = Field(unique=True, index=True)  # Unique tag name
     
     # Many-to-many relationship with Note (implicit link table)
-    notes: list[Note] = Relationship(back_populates="tags")
+    notes: list[Note] = Relationship(back_populates="tags", link_model=NoteTagLink)
 
 # Create database engine
 engine = create_engine("sqlite:///notes.db")
