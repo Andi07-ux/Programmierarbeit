@@ -85,7 +85,7 @@ Was das aufsetzen der API betrifft, hat mir zum Teil ein Kommilitone per Whatsap
 
 #### 1. ✅ What did I accomplish?
 
-Ich habe die 
+Ich habe die HTTP Methoden GET und POST kennengelernt und damit drei Endpunkte gebaut. Diese waren zum erstellen neuer Notizen, zum abrufen aller Notizen und zum abrufen bestimmter IDs. Außerdem habe ich die load und save funktionen implementiert, mit denen JSON-Daten gespeichert werden und beim Server-Neustart nicht verloren gehen. Zudem habe ich eingeführt, dass die Notes nach Kategorien gefiltert werden können und dass man einsehen kann wie oft welche Kategorie vorkam.
 
 
 
@@ -94,7 +94,7 @@ Ich habe die
 
 #### 2. 🚧 What challenges did I face?
 
-
+Ich habe bei der PUT Notiz mehrmals den Statuscode 500 erhalten und konnte lange nicht dahinter kommen woran es lag. 
 
 
 
