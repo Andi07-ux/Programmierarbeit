@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
 from datetime import datetime, timezone
 import json
+import re   
 from pathlib import Path
 from typing import Optional, Annotated
 from sqlmodel import SQLModel, Field, Session, create_engine, Relationship, select, or_, col
@@ -29,10 +30,24 @@ class Tag(SQLModel, table=True):
     __tablename__ = 'tags'
     
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(unique=True, index=True)  # Unique tag name
+    name: str = Field(unique=True, index=True, min_length=2, max_length=30)
     
     # Many-to-many relationship with Note (implicit link table)
     notes: list[Note] = Relationship(back_populates="tags", link_model=NoteTagLink)
+    
+    @field_validator("name", mode="before")
+    @classmethod
+    def normalize_tag_name(cls, v: str) -> str:
+        if isinstance(v, str):
+            return v.strip().lower()
+        return v
+
+        v = v.strip().lower()
+
+        if not re.match(r"^[a-z0-9-]+$", v):
+            raise ValueError("Tag name must be lowercase, digits or dashes only")
+        
+        return v
 
 # Create database engine
 engine = create_engine("sqlite:///notes.db")
@@ -42,18 +57,83 @@ SQLModel.metadata.create_all(engine)
 
 
 class NoteUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
-    category: Optional[str] = None
-    tags: Optional[list[str]] = None
+    model_config = ConfigDict(
+        str_strip_whitespace=True,
+        extra="forbid"
+    )
+
+    title: Optional[str] = Field(default=None, min_length=3, max_length=100)
+    content: Optional[str] = Field(default=None, min_length=1, max_length=10000)
+    category: Optional[str] = Field(default=None)
+    tags: Optional[list[str]] = Field(default=None, max_length=10)
+
+    @field_validator("category")
+    @classmethod
+    def validate_category_opt(cls, v: str) -> str | None:
+        if v is None:
+            return v
+        v = v.lower()
+        allowed_categories = {"work", "personal", "school", "ideas", "general"}
+        if v not in {"work", "personal", "school", "ideas", "general"}:
+            raise ValueError("Invalid category")
+        return v
+
+        v = v.lower().strip()
+        if not re.match(r"^[a-z]+$", v):
+            raise ValueError("Category must be lowercase letters only")
+        
+        allowed = {"work", "personal", "school", "ideas", "general"}
+        if v not in allowed:
+            raise ValueError(f"Category must be one of {allowed}")
+        return v
+    
 
 class NoteCreate(BaseModel):
-    title: str
-    content: str
-    category: str
-    tags: list [str] = []
+    model_config = ConfigDict(
+        str_strip_whitespace=True,
+        extra="forbid"
+    )
+
+    title: str = Field(min_length=3, max_length=100)
+    content: str = Field(min_length=1, max_length=10000)
+    category: str = Field()
+    tags: list [str] = Field(default=[], max_length=10)
+
+    @field_validator("category")
+    @classmethod
+    def validate_category_enum(cls, v: str) -> str:
+        v = v.lower().strip()
+
+        if not re.match(r"^[a-z]+$", v):
+            raise ValueError("Category must be lowercase letters only")
+        
+        allowed_categories = {"work", "personal", "school", "ideas", "general"}
+        if v not in allowed_categories:
+            raise ValueError(f"Category must be one of {allowed_categories}")
+        return v
+    
+    @field_validator("tags")
+    @classmethod
+    def validate_tags(cls, v: list[str]) -> list[str]:
+        processed_tags = []
+        for t in v:
+            clean_t = t.strip().lower()
+            if clean_t and len(clean_t) >= 2 and clean_t not in processed_tags:
+                processed_tags.append(clean_t)
+        
+        if len(v) != len(processed_tags):
+            pass
+        return processed_tags
+    
+    @model_validator(mode="after")
+    def check_work_tag(self) -> NoteCreate:
+        if self.category == "work" and "work" not in self.tags:
+            raise ValueError("work notes must include the 'work' tag")
+        return self
 
 class NoteResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     title: str
     content: str
@@ -61,8 +141,7 @@ class NoteResponse(BaseModel):
     tags: list [str] = []
     created_at: str
 
-    class Config:
-        from_attributes = True
+
 
 def get_session():
     """Create a new database session for each request"""
@@ -127,6 +206,35 @@ def create_note(note: NoteCreate, session: SessionDep) -> NoteResponse:
         tags=[tag.name for tag in db_note.tags],
         created_at=db_note.created_at.isoformat()
     )
+
+@app.get("/notes/stats")
+def get_note_stats(session: SessionDep):
+    """
+    Get statistics about notes from the database
+    """
+    notes = session.exec(select(Note)).all()
+    tags = session.exec(select(Tag)).all()
+    
+    # Notizen pro Kategorie zählen
+    categories = {}
+    for n in notes:
+        categories[n.category] = categories.get(n.category, 0) + 1
+    
+    # Top 5 Tags (Häufigkeit)
+    tag_counts = []
+    for t in tags:
+        tag_counts.append({"tag": t.name, "count": len(t.notes)})
+    
+    # Sortieren nach Count absteigend und die ersten 5 nehmen
+    top_tags = sorted(tag_counts, key=lambda x: x["count"], reverse=True)[:5]
+    
+    return {
+        "total_notes": len(notes),
+        "by_category": categories,
+        "top_tags": top_tags,
+        "unique_tags_count": len(tags)
+    }
+
 
 @app.get("/notes")
 def list_notes(
@@ -245,35 +353,7 @@ def delete_note(note_id: int, session: SessionDep):
         detail=f"Note with ID {note_id} not found"
     )
 
-# --- STATISTICS ---
 
-@app.get("/notes/stats")
-def get_note_stats(session: SessionDep):
-    """
-    Get statistics about notes from the database
-    """
-    notes = session.exec(select(Note)).all()
-    tags = session.exec(select(Tag)).all()
-    
-    # Notizen pro Kategorie zählen
-    categories = {}
-    for n in notes:
-        categories[n.category] = categories.get(n.category, 0) + 1
-    
-    # Top 5 Tags (Häufigkeit)
-    tag_counts = []
-    for t in tags:
-        tag_counts.append({"tag": t.name, "count": len(t.notes)})
-    
-    # Sortieren nach Count absteigend und die ersten 5 nehmen
-    top_tags = sorted(tag_counts, key=lambda x: x["count"], reverse=True)[:5]
-    
-    return {
-        "total_notes": len(notes),
-        "by_category": categories,
-        "top_tags": top_tags,
-        "unique_tags_count": len(tags)
-    }
 
 # --- TAGS ---
 
@@ -332,6 +412,7 @@ def get_notes_by_category(category_name: str, session: SessionDep):
         )
         for n in notes
     ]
+
 
 # --- PARTIAL UPDATE (PATCH) ---
 
