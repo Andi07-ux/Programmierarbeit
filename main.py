@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Query
 from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
 from datetime import datetime, timezone
 import json
@@ -115,21 +115,22 @@ class NoteCreate(BaseModel):
     @field_validator("tags")
     @classmethod
     def validate_tags(cls, v: list[str]) -> list[str]:
+        
+        # Prüfung auf die maximale Anzahl
+        if len(v) > 10:
+            raise ValueError("Too many tags")
+        
         processed_tags = []
         for t in v:
             clean_t = t.strip().lower()
-            if clean_t and len(clean_t) >= 2 and clean_t not in processed_tags:
-                processed_tags.append(clean_t)
+            # Prüfung der Mindestlänge
+            if len(clean_t) < 2:
+                raise ValueError("Tag too short")    
         
-        if len(v) != len(processed_tags):
-            pass
+            if clean_t not in processed_tags:
+                processed_tags.append(clean_t)
+
         return processed_tags
-    
-    @model_validator(mode="after")
-    def check_work_tag(self) -> NoteCreate:
-        if self.category == "work" and "work" not in self.tags:
-            raise ValueError("work notes must include the 'work' tag")
-        return self
 
 class NoteResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -157,6 +158,10 @@ app = FastAPI(
     version="0.1.0"
 )
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to my first API"}
+    
 
 @app.post("/notes", status_code=201)
 def create_note(note: NoteCreate, session: SessionDep) -> NoteResponse:
@@ -241,7 +246,9 @@ def list_notes(
     session: SessionDep,
     category: str = None,
     search: str = None,
-    tag: str = None
+    tag: str = None,
+    created_after: Optional[datetime] = None,
+    created_before: Optional[datetime] = None
 ) -> list[NoteResponse]:
     """List notes with filters"""
     
@@ -264,6 +271,12 @@ def list_notes(
     if tag:
         tag_lower = tag.lower()
         statement = statement.join(Note.tags).where(Tag.name == tag_lower)
+
+    if created_after:
+        statement = statement.where(Note.created_at >= created_after)
+
+    if created_before:
+        statement = statement.where(Note.created_at <= created_before)
     
     # Execute query
     notes = session.exec(statement).all()

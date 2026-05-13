@@ -190,7 +190,7 @@ Nachdem ich die Umsetzung der Top-5-Filterung nicht hinbekommen habe, wurde die 
 
 #### 1. ✅ What did I accomplish?
 
-
+Durchlauf der Tests: 18 failed, 13 passed, 39 errors
 
 
 
@@ -221,7 +221,7 @@ Nachdem ich die Umsetzung der Top-5-Filterung nicht hinbekommen habe, wurde die 
 
 #### 1. ✅ What did I accomplish?
 
-
+Frontend erstellt
 
 
 
@@ -250,36 +250,7 @@ Nachdem ich die Umsetzung der Top-5-Filterung nicht hinbekommen habe, wurde die 
 
 #### 1. ✅ What did I accomplish?
 
-
-
-
-
-
----
-
-#### 2. 🚧 What challenges did I face?
-
-
-
-
-
-
----
-
-#### 3. 💡 How did I overcome them?
-
-
-
-
-
-
----
-
-### Day 9
-
-#### 1. ✅ What did I accomplish?
-
-
+Aufräumen Repository
 
 
 
@@ -296,6 +267,15 @@ Nachdem ich die Umsetzung der Top-5-Filterung nicht hinbekommen habe, wurde die 
 ---
 
 #### 3. 💡 How did I overcome them?
+
+
+
+
+
+
+---
+
+
 
 
 
