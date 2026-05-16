@@ -53,8 +53,7 @@ Die Streamlit-Oberfläche öffnet sich automatisch unter http://localhost:8501.
 ## 🧪 Tests ausführen
 
 Die automatisierte Test-Suite prüft die Korrektheit der Routen, Filter und Validierungsregeln:
-
-    ```bash
+   ```bash
     cd exploration
     uv run pytest test2_main.py
 
