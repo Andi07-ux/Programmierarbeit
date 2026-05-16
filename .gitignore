@@ -1,11 +1,11 @@
 __pycache__/
 .venv/
-.pystes_cache
+.pytest_cache/
 
 notes.db
 pyproject.toml
 uv.lock
 .python.version
 
-skript/
+Skript/
 data/
