@@ -1,6 +1,6 @@
 # Work Log
 
-**Student Name:** 
+**Student Name: Andreas Moritz** 
 
 Instructions: Fill out one log for each course day. Content to consider: Course Sessions + Assignment
 
@@ -102,7 +102,7 @@ Ich habe bei Kommilitonen gefragt, ob sie das selbe Problem hatten oder eine Lö
 
 #### 1. ✅ What did I accomplish?
 
-Es wurden Tags eingeführt, um Notizen besser strukturieren und kategorisieren zu können. Zusätzlich wurden verschiedene Filterfunktionen in die bestehenden Endpunkte integriert. Neben der Einführung von DELETE-, PUT- und PATCH-Endpunkten wurden auch neue GET-Endpunkte erstellt, mit denen alle Tags angezeigt oder gezielt nach bestimmten Tags gesucht werden kann. Außerdem wurden Tag-Statistiken in den Statistik-Endpunkt eingebunden.
+Es wurden Tags eingeführt, um Notizen besser strukturieren und kategorisieren zu können. Zusätzlich wurden verschiedene Filterfunktionen in die bestehenden Endpunkte integriert. Neben der Einführung von DELETE-, PUT- und PATCH-Endpunkten wurden auch neue GET-Endpunkte erstellt, mit denen alle Tags angezeigt werden können oder gezielt nach bestimmten Tags gesucht werden kann. Außerdem wurden Tag-Statistiken in den Statistik-Endpunkt eingebunden.
 Darüber hinaus wurde bei den Notizen eine Filterfunktion nach Datum implementiert. Ein weiterer großer Schritt war der Austausch der bisherigen JSON-Dateispeicherung durch eine SQLite-Datenbank, wodurch die Datenhaltung verbessert und effizienter gestaltet wurde. Im Zuge dieser Umstellung wurden alle vorhandenen Endpunkte überarbeitet und entsprechend neu geschrieben.
 
 
@@ -132,7 +132,7 @@ Bei der Umstellung auf SQLite musste ich mehrere Ansätze ausprobieren, bis die 
 
 #### 1. ✅ What did I accomplish?
 
-Ich habe automatisierte Softwaretests unter Verwendung des pytest-Frameworks erstellt. Dabei habe ich gelernt, die Bibliothek requests zu nutzen, um meine API mit HTTP-Anfragen zu testen. Die Tests wurden nach dem "Arrange-Act-Assert"-Pattern geschrieben, um die korrektheit meiner Endpunkte sicherzustellen. Konkret habe ich die Tests für meine POST, GET, DELETE, PUT und PATCH endpunkte geschrieben. Außerdem habe ich gelernt wie ich gezielt Fehlerfälle, wie 404-Meldungen bei nicht existierenden IDs, teste.
+Ich habe automatisierte Softwaretests unter Verwendung des pytest-Frameworks erstellt. Dabei habe ich gelernt, die Bibliothek requests zu nutzen, um meine API mit HTTP-Anfragen zu testen. Die Tests wurden nach dem "Arrange-Act-Assert"-Pattern geschrieben, um die Korrektheit meiner Endpunkte sicherzustellen. Konkret habe ich die Tests für meine POST, GET, DELETE, PUT und PATCH endpunkte geschrieben. Außerdem habe ich gelernt wie ich gezielt Fehlerfälle, wie 404-Meldungen bei nicht existierenden IDs, teste.
 
 
 ---
@@ -181,7 +181,7 @@ Um diese Unsicherheiten zu beseitigen, habe ich mir das Skript des Unterrichtsta
 
 #### 1. ✅ What did I accomplish?
 
-Der Schwerpunkt des Tages lag auf der umfassenden Qualitätssicherung der API. Ich habe eine vorgegebene Test-Suite in mein Repository integriert, um die gesamte Funtkionalität der Anwendung mit pytest zu prüfen. Da uns bis zu nächsten Vorlesung fünf Tage zur Verfügung standen, habe ich die Zeit genutzt, um den gesammten bisherigen Stoff intensiv zu wiederholen. Dafür habe ich ein komplett neues Repository erstellt und mich noch einmal tiefgehend mit Skript 3 befasst, um insbesondere die Umstellung von der JSON-Dateispeicherung auf die relationale SQLite-Datenbank von Grund auf eigenständig zu üben und zu verinnerlichen.
+Der Schwerpunkt des Tages lag auf der umfassenden Qualitätssicherung der API. Ich habe eine vorgegebene Test-Suite in mein Repository integriert, um die gesamte Funktionalität der Anwendung mit pytest zu prüfen. Da uns bis zu nächsten Vorlesung fünf Tage zur Verfügung standen, habe ich die Zeit genutzt, um den gesammten bisherigen Stoff intensiv zu wiederholen. Dafür habe ich ein komplett neues Repository erstellt und mich noch einmal tiefgehend mit Skript 3 befasst, um insbesondere die Umstellung von der JSON-Dateispeicherung auf die relationale SQLite-Datenbank von Grund auf eigenständig zu üben und zu verinnerlichen.
 
 
 ---
@@ -189,7 +189,7 @@ Der Schwerpunkt des Tages lag auf der umfassenden Qualitätssicherung der API. I
 #### 2. 🚧 What challenges did I face?
 
 Nach dem ersten Ausführen der neuen Test-Suite trat ein Ergebnis von 18 fehlgeschlagenen Tests, 13 bestandenen Tests und 39 Errors auf. Bei der Fehleranalyse stellte sich heraus, dass ein Großteil der Probleme durch den model_validator verursacht wurde. Dieser verhinderte das Erstellen von Notizen mit der Kategorie "work", wenn der Tag "work" fehlte. Die Test-Suite versuchte jedoch laufend, genau solche Testdaten zu generieren, wodurch auch alle darauf aufbauenden Abfragetests fehlschlugen.
-Ein weiteres Problem war mein field-validator für Tags: Diese filterte zu kurze Tags einfach aus der Liste heraus, während die Test-Suite an dieser Stelle eine Fehlermeldung erwartete. Zuletzt scheiterten Test an den Parametern created_after und created_before im Notes-Endpunkt, da mein COde ein falsches Datumsformat anfangs einfach ingorierte, statt den geforderten Validierungsfehler auszugeben.
+Ein weiteres Problem war mein field-validator für Tags: Diese filterte zu kurze Tags einfach aus der Liste heraus, während die Test-Suite an dieser Stelle eine Fehlermeldung erwartete. Zuletzt scheiterten Test an den Parametern created_after und created_before im Notes-Endpunkt, da mein Code ein falsches Datumsformat anfangs einfach ingorierte, statt den geforderten Validierungsfehler auszugeben.
 
 
 ---
@@ -215,7 +215,7 @@ Ich habe ein interaktives Web-Frontend mittels Streamlit implementiert, um Benut
 
 #### 2. 🚧 What challenges did I face?
 
-Ein Schwierigkeit lag beim Aufräumen des Codes in der Datei main.py: Ich wusste von mir aus nicht, wie der Code im Optimalfall übersichtlich soritert und strukturiert sein sollte.
+Ein Schwierigkeit lag beim Aufräumen des Codes in der Datei main.py: Ich wusste von mir aus nicht, wie der Code im Optimalfall übersichtlich sortiert und strukturiert sein sollte.
 
 
 ---
